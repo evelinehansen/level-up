@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LevelUp</title>
+  <meta name="description" content="A win logger for dørstokkmila. Every time you overcome the threshold resistance and do the hard thing anyway, log a victory.">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Shown only when a localStorage write fails (quota or private mode) -->
+  <div id="save-warning" class="save-warning" hidden>
+    Saving failed. Your browser refused the write, so the latest change is not
+    stored. Export your data now to keep it safe.
+  </div>
+
+  <header class="app-header">
+    <h1 class="app-title">Level<span class="app-title-accent">Up</span></h1>
+    <div class="header-right">
+      <span id="backup-status" class="backup-status">Last backup: never</span>
+      <button id="export-btn" class="btn" type="button">Export</button>
+      <button id="import-btn" class="btn" type="button">Import</button>
+      <input id="import-file" type="file" accept=".json,application/json" hidden>
+    </div>
+  </header>
+
+  <nav class="tab-bar" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="tab-wins" aria-selected="true" aria-controls="panel-wins" type="button">
+      Wins<span id="wins-badge" class="tab-badge" hidden></span>
+    </button>
+    <button class="tab" role="tab" id="tab-history" aria-selected="false" aria-controls="panel-history" type="button">
+      History
+    </button>
+  </nav>
+
+  <div id="filter-row" class="filter-row" hidden></div>
+
+  <div class="log-row">
+    <button id="log-btn" class="btn primary" type="button">Log a victory</button>
+    <span id="seed-note" class="seed-note" hidden>Sample data. Log your first win to clear it.</span>
+  </div>
+
+  <main>
+    <section id="panel-wins" role="tabpanel" aria-labelledby="tab-wins">
+      <div id="empty-state" class="empty-state card" hidden>
+        <p class="empty-line-1">No wins logged yet.</p>
+        <p>Every time you do the thing despite the rain, the dark, or the couch, that is a victory over dørstokkmila.</p>
+        <p>Tap Log a victory to record your first one.</p>
+      </div>
+
+      <h2 id="headline" class="headline" hidden>
+        You've defeated dørstokkmila <span id="headline-count" class="headline-count"></span>!
+      </h2>
+
+      <section id="heatmap-card" class="card viz-card" hidden>
+        <h3 class="section-h">The past year</h3>
+        <div class="heatmap-wrap">
+          <svg id="heatmap-days" aria-hidden="true"></svg>
+          <div class="heatmap-scroll">
+            <svg id="heatmap-svg" role="img" aria-label="Wins per day over the past year"></svg>
+          </div>
+        </div>
+        <p class="viz-footnote">Each square is a day, darker sage means more wins that day. Gaps carry no penalty.</p>
+      </section>
+
+      <section id="treemap-card" class="card viz-card" hidden>
+        <h3 class="section-h">Conditions defeated</h3>
+        <svg id="treemap-svg" role="img" aria-label="Distribution of wins across conditions"></svg>
+      </section>
+
+      <section id="table-card" class="card viz-card" hidden>
+        <h3 class="section-h">Condition tally</h3>
+        <ul id="condition-table" class="condition-table"></ul>
+      </section>
+
+      <section id="reveal-card" class="card viz-card" hidden>
+        <h3 class="section-h">Conditions defeated</h3>
+        <p id="reveal-copy" class="reveal-copy"></p>
+        <div class="progress-track"><div id="reveal-fill" class="progress-fill"></div></div>
+      </section>
+    </section>
+
+    <section id="panel-history" role="tabpanel" aria-labelledby="tab-history" hidden>
+      <p id="history-empty" class="history-empty" hidden>No wins here yet.</p>
+      <ul id="history-list" class="history-list"></ul>
+    </section>
+  </main>
+
+  <!-- Log / edit form: side panel on desktop, bottom sheet below 720 px -->
+  <div id="form-backdrop" class="form-backdrop" hidden></div>
+  <aside id="form-panel" class="form-panel" role="dialog" aria-modal="true" aria-labelledby="form-title" hidden>
+    <h2 id="form-title" class="form-title">Log a victory</h2>
+    <p id="form-date" class="form-date" hidden></p>
+    <form id="win-form">
+      <fieldset class="form-section">
+        <legend class="section-h">What did you defeat? (pick at least one)</legend>
+        <div id="condition-checks" class="condition-checks"></div>
+      </fieldset>
+      <div class="form-section">
+        <label class="section-h" for="category-input">Category (optional)</label>
+        <input id="category-input" type="text" list="category-options" placeholder="Running, Work, Home..." autocomplete="off">
+        <datalist id="category-options"></datalist>
+      </div>
+      <div class="form-section">
+        <label class="section-h" for="note-input">Note (optional)</label>
+        <textarea id="note-input" rows="3" placeholder="Anything worth remembering"></textarea>
+      </div>
+      <div class="form-actions">
+        <button id="form-save" class="btn primary" type="submit" disabled>Save win</button>
+        <button id="form-cancel" class="btn ghost" type="button">Cancel</button>
+      </div>
+    </form>
+  </aside>
+
+  <!-- Import choice: merge or replace -->
+  <div id="import-backdrop" class="form-backdrop" hidden></div>
+  <div id="import-dialog" class="import-dialog card" role="dialog" aria-modal="true" aria-labelledby="import-title" hidden>
+    <h2 id="import-title" class="form-title">Import wins</h2>
+    <p id="import-summary"></p>
+    <div class="form-actions">
+      <button id="import-merge" class="btn primary" type="button">Merge</button>
+      <button id="import-replace" class="btn danger" type="button">Replace everything</button>
+      <button id="import-cancel" class="btn ghost" type="button">Cancel</button>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
