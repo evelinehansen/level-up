@@ -66,15 +66,17 @@ export function sortNewestFirst(entries) {
 
 // ---------- heatmap ----------
 
+// A day's heat is the number of conditions defeated, so an entry that beat
+// two conditions weighs twice as much as one that beat a single condition.
 export function perDayCounts(entries) {
   const counts = {};
   for (const e of entries) {
-    counts[e.dateISO] = (counts[e.dateISO] || 0) + 1;
+    counts[e.dateISO] = (counts[e.dateISO] || 0) + e.conditions.length;
   }
   return counts;
 }
 
-// 0 wins -> level 0, then increasing sage intensity. Density, never streaks.
+// 0 conditions -> level 0, then increasing sage intensity. Density, never streaks.
 export function heatLevel(count) {
   if (count <= 0) return 0;
   if (count === 1) return 1;

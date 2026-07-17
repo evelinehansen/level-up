@@ -39,7 +39,8 @@ body {
   -webkit-font-smoothing: antialiased;
   max-width: 900px;
   margin: 0 auto;
-  padding: 1.25rem 1rem 4rem;
+  /* Extra bottom padding so content can scroll clear of the floating button */
+  padding: 1.25rem 1rem 6.5rem;
 }
 
 /* ---------- buttons ---------- */
@@ -167,12 +168,26 @@ body {
 
 /* ---------- log row ---------- */
 
+/* The button itself floats (see #log-btn), so the row only takes up space
+   when the seed note is showing. */
 .log-row {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  margin-top: 1.25rem;
   flex-wrap: wrap;
+}
+.log-row:has(.seed-note:not([hidden])) { margin-top: 1.25rem; }
+
+/* Floating action button, bottom right of the screen. Sits below the
+   form backdrop (z-index 10) so open panels cover it. */
+#log-btn {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  z-index: 9;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  box-shadow: var(--shadow-big);
 }
 
 .seed-note {

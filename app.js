@@ -228,7 +228,7 @@ function renderHeatmap(entries) {
         fill: HEAT_COLORS[day.level],
       });
       const title = svgEl('title', {});
-      title.textContent = `${dateFmt.format(day.date)}: ${day.count === 0 ? 'no wins' : timesText(day.count).replace('time', 'win')}`;
+      title.textContent = `${dateFmt.format(day.date)}: ${day.count === 0 ? 'no wins' : `${day.count} ${day.count === 1 ? 'condition' : 'conditions'} defeated`}`;
       rect.append(title);
       svg.append(rect);
     });
