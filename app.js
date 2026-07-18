@@ -15,8 +15,8 @@ import { makeSeedEntries } from './seed.js';
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const HEAT_COLORS = ['var(--heat-0)', 'var(--heat-1)', 'var(--heat-2)', 'var(--heat-3)', 'var(--heat-4)'];
 const dateFmt = new Intl.DateTimeFormat('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' });
-const monthFmt = new Intl.DateTimeFormat('nb-NO', { month: 'short' });
-const weekdayFmt = new Intl.DateTimeFormat('nb-NO', { weekday: 'short' });
+const monthFmt = new Intl.DateTimeFormat('en-GB', { month: 'short' });
+const weekdayFmt = new Intl.DateTimeFormat('en-GB', { weekday: 'short' });
 
 const state = {
   entries: [],
