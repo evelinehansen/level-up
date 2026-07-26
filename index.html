@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- The shared content frame: shell and content sit in the same 880 px column -->
+  <div class="app">
   <!-- Shown only when a localStorage write fails (quota or private mode) -->
   <div id="save-warning" class="save-warning" hidden>
     Saving failed. Your browser refused the write, so the latest change is not
@@ -87,6 +89,7 @@
       <ul id="history-list" class="history-list"></ul>
     </section>
   </main>
+  </div><!-- /.app -->
 
   <!-- Log / edit form: side panel on desktop, bottom sheet below 720 px -->
   <div id="form-backdrop" class="form-backdrop" hidden></div>

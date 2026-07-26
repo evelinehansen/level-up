@@ -9,6 +9,13 @@
   --sage-bright-deep: #5E8B4C;
   --sage-bright-tint: #EAF3E2;
   --line: #E7E5DA;      --track: #EDECE2;
+  --scrim: rgba(38, 42, 33, 0.35);
+
+  /* the shared content frame */
+  --page-max: 880px;
+  --page-pad: 24px;
+  --measure: 62ch;
+
   --radius: 16px;
   --shadow: 0 10px 30px rgba(44, 48, 36, 0.08);
   --shadow-big: 0 24px 70px rgba(44, 48, 36, 0.18);
@@ -17,11 +24,13 @@
           "Helvetica Neue", Arial, sans-serif;
   --serif: ui-serif, Georgia, "Times New Roman", serif;
 
-  /* Heatmap sage intensity buckets (level 0 to 4) */
+  /* Heatmap sage intensity buckets (level 0 to 4). The ramp starts one notch
+     darker than the empty track, because a single condition defeated is the
+     common case and needs to read at a glance. */
   --heat-0: #EDECE2;
-  --heat-1: #CDDCC8;
-  --heat-2: #A3BE9B;
-  --heat-3: #7D9A75;
+  --heat-1: #B9CEB2;
+  --heat-2: #95B18E;
+  --heat-3: #76936E;
   --heat-4: #4C6447;
 }
 
@@ -37,10 +46,16 @@ body {
   color: var(--ink);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  max-width: 900px;
-  margin: 0 auto;
+}
+
+/* The content frame. The width lives here, never on <body>, so the wordmark
+   lands at the same coordinate as the sibling tools. */
+.app {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
   /* Extra bottom padding so content can scroll clear of the floating button */
-  padding: 1.25rem 1rem 6.5rem;
+  padding-block: 1.25rem 6.5rem;
 }
 
 /* ---------- buttons ---------- */
@@ -84,7 +99,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -95,10 +110,14 @@ body {
 }
 .app-title-accent { color: var(--sage); }
 
+/* One horizontal cluster: [backup status][Export][Import]. The status is a
+   sibling of the pills, never its own block, so the whole cluster reflows as
+   one unit. */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .backup-status {
@@ -222,6 +241,7 @@ body {
   color: var(--ink-faint);
   font-size: 0.8rem;
   margin-top: 0.6rem;
+  max-width: var(--measure);
 }
 
 .heatmap-wrap { display: flex; align-items: flex-start; }
@@ -244,7 +264,7 @@ body {
 .condition-name { font-weight: 600; }
 .condition-count { color: var(--ink-soft); font-size: 0.9rem; white-space: nowrap; }
 
-.reveal-copy { color: var(--ink-soft); margin-bottom: 0.75rem; }
+.reveal-copy { color: var(--ink-soft); margin-bottom: 0.75rem; max-width: var(--measure); }
 
 .progress-track { height: 6px; border-radius: 999px; background: var(--track); overflow: hidden; }
 .progress-fill  { height: 100%; border-radius: 999px; background: var(--sage);
@@ -256,7 +276,7 @@ body {
   margin-top: 1.5rem;
   padding: 1.5rem 1.5rem;
 }
-.empty-state p { color: var(--ink-soft); }
+.empty-state p { color: var(--ink-soft); max-width: var(--measure); }
 .empty-state .empty-line-1 {
   font-family: var(--serif);
   font-weight: 600;
@@ -311,7 +331,7 @@ body {
 
 .form-backdrop {
   position: fixed; inset: 0;
-  background: rgba(38, 42, 33, 0.35);
+  background: var(--scrim);
   z-index: 10;
 }
 
@@ -397,9 +417,11 @@ textarea { resize: vertical; }
 /* ---------- responsive ---------- */
 
 @media (max-width: 719px) {
-  .app-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-  .header-right { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
-  .backup-status { width: 100%; order: 3; }
+  .app { padding-inline: 16px; }
+
+  /* The whole cluster drops together to a full-width line under the wordmark,
+     status still first and still inline with the pills. */
+  .header-right { width: 100%; justify-content: flex-start; }
 
   /* Side panel becomes a bottom sheet */
   .form-panel {
